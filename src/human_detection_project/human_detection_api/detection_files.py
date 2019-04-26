@@ -301,6 +301,8 @@ def all_operations():
     st_time = 0
     model_path = 'human_detection_api/frozen_inference_graph.pb'
     print("The time has come")
+    label_number = 0
+
     od_api = DetectorAPI(path_to_ckpt=model_path)
     threshold = 0.7
     video = cv2.VideoCapture(0)
@@ -469,6 +471,42 @@ def all_operations():
             #     video.release()
             #     cv2.destroyAllWindows()
             # ==========================================================================================================
+            if schedule_detection.object_detection is True:
+                # print("running person detection")
+                img = cv2.resize(img, (1280, 720))
+                # selected_frame = select_frame_in_frame(img, 0, 0, 400, 720)
+                boxes, scores, classes, num = od_api.process_frame(img)
+
+                # Visualization of the results of a detection.
+                if schedule_detection.object_name == "laptop":
+                    label_number = 73
+                elif schedule_detection.object_name == "cell phone":
+                    label_number = 77
+                elif schedule_detection.object_name == "bottle":
+                    label_number = 44
+                elif schedule_detection.object_name == "chair":
+                    label_number = 62
+                elif schedule_detection.object_name == "clock":
+                    label_number = 85
+
+                object_found = False
+                for i in range(len(boxes)):
+
+                    # Class 1 represents human
+                    if classes[i] == label_number and scores[i] > threshold:
+                        object_found = True
+                        break
+
+                if object_found is False:
+                    end_time = time.time()
+                    if end_time - st_time > 10:
+                        st_time = time.time()
+                        image_name = str(schedule_detection.object_name) + " not_present"
+                        # save_in_database(image_name, img, type_image="cft")
+                        print(image_name)
+                        time.sleep(10)
+                else:
+                    pass
 
         elif views.start_stop is False:
             break

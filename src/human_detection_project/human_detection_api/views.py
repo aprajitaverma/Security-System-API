@@ -200,6 +200,10 @@ class RunDetectionSettings(APIView):
             ppc_end_time = serializer.data.get('ppc_end_time')
             person_name = serializer.data.get('person_name')
             time_constraint = serializer.data.get('time_constraint')
+            object_detection = serializer.data.get('object_detection')
+            object_name = serializer.data.get('object_name')
+            od_start_time = serializer.data.get('od_start_time')
+            od_end_time = serializer.data.get('od_end_time')
 
             t1 = threading.Thread(target=schedule_detection.run_scheduler, args=(check_fire, fc_start_time, fc_end_time,
                                                                                  human_checker_not_present,
@@ -207,7 +211,9 @@ class RunDetectionSettings(APIView):
                                                                                  human_checker_present, hcp_start_time,
                                                                                  hcp_end_time, person_present_checker,
                                                                                  ppc_start_time, ppc_end_time,
-                                                                                 person_name, time_constraint))
+                                                                                 person_name, time_constraint,
+                                                                                 object_detection, object_name,
+                                                                                 od_start_time, od_end_time))
 
             t1.start()
             return Response({"message": "Saved given operation settings", "status": "True"}, status=status.HTTP_200_OK)

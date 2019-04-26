@@ -59,6 +59,10 @@ class DetectionInputSerializer(serializers.Serializer):
     ppc_end_time = serializers.DateTimeField(required=False, allow_null=True)
     person_name = serializers.CharField(max_length=200, required=False)
     time_constraint = serializers.IntegerField(required=False)
+    object_detection = serializers.BooleanField()
+    object_name = serializers.CharField(max_length=200, required=False)
+    od_start_time = serializers.DateTimeField(required=False)
+    od_end_time = serializers.DateTimeField(required=False, allow_null=True)
 
 
 

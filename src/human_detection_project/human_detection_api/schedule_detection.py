@@ -6,8 +6,10 @@ check_fire = False
 human_checker_not_present = False
 human_checker_present = False
 person_present_checker = False
+object_detection = False
 person = "Unknown"
 time_constraint = 0
+object_name = None
 
 
 def set_fire_detection(p):
@@ -36,10 +38,16 @@ def set_person_present_checker(p):
         detection_files.timer = 0
 
 
+def set_object_detection(p):
+    global object_detection
+    object_detection = p
+    print("setting object_detection to " + str(object_detection))
+
+
 # def bleh(p):
 #     print(p)
 
-def run_scheduler(cff, fst, fet, hnpf, hnpst, hnpet, hpf, hpst, hpet, ppc, ppcst, ppcet, pn, tc):
+def run_scheduler(cff, fst, fet, hnpf, hnpst, hnpet, hpf, hpst, hpet, ppc, ppcst, ppcet, pn, tc, od, on, odst, odet):
 
     sched = Scheduler()
     sched.start()
@@ -102,6 +110,21 @@ def run_scheduler(cff, fst, fet, hnpf, hnpst, hnpet, hpf, hpst, hpet, ppc, ppcst
             temp = hpet.replace('T', ' ')
             temp = temp.replace('Z', ' ')
             sched.add_date_job(set_human_checker_present, temp, [False])
+        else:
+            pass
+
+    if od is True:
+        if odst is not None:
+            global object_name
+            object_name = on
+            print(object_name)
+            temp = odst.replace('T', ' ')
+            temp = temp.replace('Z', ' ')
+            sched.add_date_job(set_object_detection, temp, [True])
+        if odet is not None:
+            temp = odet.replace('T', ' ')
+            temp = temp.replace('Z', ' ')
+            sched.add_date_job(set_object_detection, temp, [False])
         else:
             pass
 
